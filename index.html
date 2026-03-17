@@ -2,238 +2,255 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Equity Thesis Journal</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Points of Leverage</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   :root {
-    --bg: #0a0d0f;
-    --bg2: #111519;
-    --bg3: #181d22;
-    --border: #1e252d;
-    --border2: #2a3340;
-    --text: #e8edf2;
-    --text2: #7a8fa0;
-    --text3: #4a5a6a;
-    --accent: #c8a96e;
-    --accent2: #8fb8d4;
-    --green: #5aad8a;
-    --red: #c06060;
-    --orange: #d4855a;
-    --purple: #9b8ecf;
+    --bg:#0a0d0f; --bg2:#111519; --bg3:#181d22;
+    --border:#1e252d; --border2:#2a3340;
+    --text:#e8edf2; --text2:#7a8fa0; --text3:#4a5a6a;
+    --accent:#c8a96e; --green:#5aad8a; --red:#c06060; --orange:#d4855a;
+    --nav-h:60px; --top-h:56px;
   }
+  html,body { background:var(--bg); color:var(--text); font-family:'DM Mono',monospace; font-size:14px; line-height:1.6; min-height:100vh; -webkit-text-size-adjust:100%; }
 
-  html { background: var(--bg); color: var(--text); font-family: 'DM Mono', monospace; font-size: 14px; line-height: 1.6; min-height: 100vh; }
+  /* DESKTOP */
+  .shell { display:flex; min-height:100vh; }
+  .sidebar { width:260px; flex-shrink:0; background:var(--bg2); border-right:1px solid var(--border); display:flex; flex-direction:column; position:sticky; top:0; height:100vh; overflow-y:auto; }
+  .sidebar-header { padding:28px 24px 20px; border-bottom:1px solid var(--border); }
+  .logo { font-family:'Instrument Serif',serif; font-size:18px; color:var(--accent); }
+  .logo-sub { font-size:10px; color:var(--text3); letter-spacing:.15em; text-transform:uppercase; margin-top:2px; }
+  .sidebar-search { padding:16px 16px 12px; }
+  .search-input { width:100%; background:var(--bg3); border:1px solid var(--border); border-radius:6px; padding:8px 12px; color:var(--text); font-family:'DM Mono',monospace; font-size:12px; outline:none; transition:border-color .2s; }
+  .search-input::placeholder { color:var(--text3); }
+  .search-input:focus { border-color:var(--border2); }
+  .sidebar-section { padding:8px 16px 4px; font-size:10px; color:var(--text3); letter-spacing:.15em; text-transform:uppercase; }
+  .filter-btn { display:block; width:calc(100% - 32px); margin:2px 16px; background:none; border:none; border-radius:5px; padding:7px 10px; text-align:left; cursor:pointer; font-family:'DM Mono',monospace; font-size:12px; color:var(--text2); transition:all .15s; }
+  .filter-btn:hover { background:var(--bg3); color:var(--text); }
+  .filter-btn.active { background:var(--bg3); color:var(--accent); border-left:2px solid var(--accent); padding-left:8px; }
+  .filter-count { float:right; font-size:10px; color:var(--text3); margin-top:1px; }
+  .add-btn { margin:16px; width:calc(100% - 32px); background:var(--accent); border:none; border-radius:6px; padding:10px; color:#0a0d0f; font-family:'DM Mono',monospace; font-size:12px; font-weight:500; cursor:pointer; letter-spacing:.05em; transition:opacity .2s; }
+  .add-btn:hover { opacity:.88; }
+  .main { flex:1; padding:40px 48px; max-width:960px; }
 
-  /* LAYOUT */
-  .shell { display: flex; min-height: 100vh; }
-  .sidebar { width: 260px; flex-shrink: 0; background: var(--bg2); border-right: 1px solid var(--border); padding: 0; display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
-  .main { flex: 1; padding: 40px 48px; max-width: 960px; }
+  /* MOBILE TOP BAR */
+  .mobile-topbar { display:none; position:fixed; top:0; left:0; right:0; height:var(--top-h); background:var(--bg2); border-bottom:1px solid var(--border); align-items:center; justify-content:space-between; padding:0 16px; z-index:50; }
+  .mobile-logo { font-family:'Instrument Serif',serif; font-size:16px; color:var(--accent); white-space:nowrap; }
+  .mobile-search-wrap { flex:1; margin:0 10px; }
+  .mobile-add-btn { background:var(--accent); border:none; border-radius:6px; padding:7px 12px; color:#0a0d0f; font-family:'DM Mono',monospace; font-size:11px; font-weight:500; cursor:pointer; white-space:nowrap; }
 
-  /* SIDEBAR */
-  .sidebar-header { padding: 28px 24px 20px; border-bottom: 1px solid var(--border); }
-  .logo { font-family: 'Instrument Serif', serif; font-size: 18px; color: var(--accent); letter-spacing: 0.02em; }
-  .logo-sub { font-size: 10px; color: var(--text3); letter-spacing: 0.15em; text-transform: uppercase; margin-top: 2px; }
+  /* MOBILE BOTTOM NAV */
+  .mobile-nav { display:none; position:fixed; bottom:0; left:0; right:0; height:var(--nav-h); background:var(--bg2); border-top:1px solid var(--border); z-index:50; align-items:stretch; }
+  .nav-tab { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; background:none; border:none; cursor:pointer; font-family:'DM Mono',monospace; font-size:9px; color:var(--text3); letter-spacing:.06em; text-transform:uppercase; gap:4px; padding:8px 2px; transition:color .15s; }
+  .nav-tab.active { color:var(--accent); }
+  .nav-tab svg { width:18px; height:18px; stroke:currentColor; fill:none; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
 
-  .sidebar-search { padding: 16px 16px 12px; }
-  .search-input { width: 100%; background: var(--bg3); border: 1px solid var(--border); border-radius: 6px; padding: 8px 12px; color: var(--text); font-family: 'DM Mono', monospace; font-size: 12px; outline: none; transition: border-color 0.2s; }
-  .search-input::placeholder { color: var(--text3); }
-  .search-input:focus { border-color: var(--border2); }
+  /* FILTER SHEET */
+  .filter-sheet { display:none; position:fixed; bottom:var(--nav-h); left:0; right:0; background:var(--bg2); border-top:1px solid var(--border); padding:16px; z-index:40; max-height:55vh; overflow-y:auto; }
+  .filter-sheet.open { display:block; }
+  .filter-sheet-title { font-size:10px; color:var(--text3); letter-spacing:.15em; text-transform:uppercase; margin-bottom:10px; }
+  .filter-chips { display:flex; flex-wrap:wrap; gap:8px; }
+  .chip { background:var(--bg3); border:1px solid var(--border2); border-radius:20px; padding:5px 14px; font-family:'DM Mono',monospace; font-size:11px; color:var(--text2); cursor:pointer; transition:all .15s; }
+  .chip.active { background:rgba(200,169,110,.15); color:var(--accent); border-color:var(--accent); }
 
-  .sidebar-section { padding: 8px 16px 4px; font-size: 10px; color: var(--text3); letter-spacing: 0.15em; text-transform: uppercase; }
+  /* PAGE */
+  .page-header { margin-bottom:28px; border-bottom:1px solid var(--border); padding-bottom:20px; }
+  .page-title { font-family:'Instrument Serif',serif; font-size:32px; color:var(--text); font-weight:400; letter-spacing:-.02em; }
+  .page-meta { font-size:11px; color:var(--text3); margin-top:6px; letter-spacing:.08em; }
 
-  .filter-btn { display: block; width: calc(100% - 32px); margin: 2px 16px; background: none; border: none; border-radius: 5px; padding: 7px 10px; text-align: left; cursor: pointer; font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text2); transition: all 0.15s; }
-  .filter-btn:hover { background: var(--bg3); color: var(--text); }
-  .filter-btn.active { background: var(--bg3); color: var(--accent); border-left: 2px solid var(--accent); padding-left: 8px; }
-  .filter-count { float: right; font-size: 10px; color: var(--text3); margin-top: 1px; }
+  /* STATS */
+  .stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:28px; }
+  .stat-card { background:var(--bg2); border:1px solid var(--border); border-radius:8px; padding:14px 16px; }
+  .stat-label { font-size:10px; color:var(--text3); letter-spacing:.1em; text-transform:uppercase; margin-bottom:5px; }
+  .stat-val { font-size:20px; color:var(--text); font-family:'Instrument Serif',serif; }
+  .stat-sub { font-size:10px; color:var(--text3); margin-top:2px; }
 
-  .add-btn { margin: 16px; width: calc(100% - 32px); background: var(--accent); border: none; border-radius: 6px; padding: 10px; color: #0a0d0f; font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500; cursor: pointer; letter-spacing: 0.05em; transition: opacity 0.2s; }
-  .add-btn:hover { opacity: 0.88; }
+  /* CARDS */
+  .cards-grid { display:flex; flex-direction:column; gap:14px; }
+  .thesis-card { background:var(--bg2); border:1px solid var(--border); border-radius:10px; padding:20px 22px; cursor:pointer; transition:all .2s; position:relative; overflow:hidden; }
+  .thesis-card::before { content:''; position:absolute; top:0; left:0; width:3px; height:100%; }
+  .thesis-card.buy::before { background:var(--green); }
+  .thesis-card.hold::before { background:var(--accent); }
+  .thesis-card.watch::before { background:var(--orange); }
+  .thesis-card:hover { border-color:var(--border2); transform:translateY(-1px); }
+  .card-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; }
+  .card-ticker { font-size:22px; color:var(--text); font-family:'Instrument Serif',serif; }
+  .card-name { font-size:11px; color:var(--text3); margin-top:2px; }
+  .card-right { text-align:right; }
+  .card-view { font-size:10px; font-weight:500; letter-spacing:.1em; text-transform:uppercase; padding:3px 10px; border-radius:4px; }
+  .card-view.buy { background:rgba(90,173,138,.15); color:var(--green); }
+  .card-view.hold { background:rgba(200,169,110,.15); color:var(--accent); }
+  .card-view.watch { background:rgba(212,133,90,.15); color:var(--orange); }
+  .card-price { font-size:12px; color:var(--text2); margin-top:4px; }
+  .card-upside { font-size:11px; margin-top:2px; }
+  .card-upside.pos { color:var(--green); }
+  .card-upside.neg { color:var(--red); }
+  .card-thesis { font-size:12px; color:var(--text2); line-height:1.65; margin-bottom:12px; }
+  .point-row { display:flex; gap:8px; margin-bottom:5px; font-size:11px; color:var(--text2); line-height:1.5; }
+  .point-dot { width:4px; height:4px; border-radius:50%; background:var(--accent); flex-shrink:0; margin-top:6px; }
+  .card-meta { display:flex; justify-content:space-between; padding-top:12px; border-top:1px solid var(--border); font-size:10px; color:var(--text3); }
 
-  /* MAIN HEADER */
-  .page-header { margin-bottom: 36px; border-bottom: 1px solid var(--border); padding-bottom: 24px; }
-  .page-title { font-family: 'Instrument Serif', serif; font-size: 32px; color: var(--text); font-weight: 400; letter-spacing: -0.02em; }
-  .page-meta { font-size: 11px; color: var(--text3); margin-top: 6px; letter-spacing: 0.08em; }
-
-  /* STATS ROW */
-  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 32px; }
-  .stat-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 16px 18px; }
-  .stat-label { font-size: 10px; color: var(--text3); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 6px; }
-  .stat-val { font-size: 22px; color: var(--text); font-family: 'Instrument Serif', serif; }
-  .stat-sub { font-size: 10px; color: var(--text3); margin-top: 3px; }
-
-  /* THESIS CARDS */
-  .cards-grid { display: flex; flex-direction: column; gap: 16px; }
-  .thesis-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 22px 24px; cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden; }
-  .thesis-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; }
-  .thesis-card.buy::before { background: var(--green); }
-  .thesis-card.hold::before { background: var(--accent); }
-  .thesis-card.watch::before { background: var(--orange); }
-  .thesis-card:hover { border-color: var(--border2); transform: translateY(-1px); }
-
-  .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
-  .card-ticker { font-size: 22px; color: var(--text); font-family: 'Instrument Serif', serif; }
-  .card-name { font-size: 11px; color: var(--text3); margin-top: 2px; letter-spacing: 0.05em; }
-  .card-right { text-align: right; }
-  .card-view { font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; padding: 3px 10px; border-radius: 4px; }
-  .card-view.buy { background: rgba(90,173,138,0.15); color: var(--green); }
-  .card-view.hold { background: rgba(200,169,110,0.15); color: var(--accent); }
-  .card-view.watch { background: rgba(212,133,90,0.15); color: var(--orange); }
-  .card-price { font-size: 13px; color: var(--text2); margin-top: 5px; }
-  .card-upside { font-size: 11px; margin-top: 2px; }
-  .card-upside.pos { color: var(--green); }
-  .card-upside.neg { color: var(--red); }
-
-  .card-thesis { font-size: 12px; color: var(--text2); line-height: 1.65; margin-bottom: 14px; }
-
-  .card-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
-  .tag { font-size: 10px; padding: 2px 8px; border-radius: 3px; border: 1px solid var(--border2); color: var(--text3); letter-spacing: 0.05em; }
-
-  .card-meta { display: flex; justify-content: space-between; align-items: center; padding-top: 14px; border-top: 1px solid var(--border); }
-  .card-industry { font-size: 10px; color: var(--text3); letter-spacing: 0.08em; }
-  .card-date { font-size: 10px; color: var(--text3); }
-
-  .card-points { margin-bottom: 14px; }
-  .point-row { display: flex; gap: 8px; margin-bottom: 6px; font-size: 11px; color: var(--text2); line-height: 1.5; }
-  .point-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 6px; }
-
-  /* DETAIL VIEW */
-  .detail-view { display: none; }
-  .detail-view.active { display: block; }
-  .list-view { display: block; }
-  .list-view.hidden { display: none; }
-
-  .back-btn { background: none; border: none; color: var(--text3); font-family: 'DM Mono', monospace; font-size: 12px; cursor: pointer; padding: 0 0 24px; letter-spacing: 0.05em; transition: color 0.15s; }
-  .back-btn:hover { color: var(--accent); }
-
-  .detail-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 28px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
-  .detail-ticker { font-family: 'Instrument Serif', serif; font-size: 44px; color: var(--text); line-height: 1; }
-  .detail-name { font-size: 13px; color: var(--text3); margin-top: 6px; letter-spacing: 0.05em; }
-  .detail-industry-badge { font-size: 10px; color: var(--text3); border: 1px solid var(--border2); border-radius: 4px; padding: 3px 10px; margin-top: 8px; display: inline-block; letter-spacing: 0.08em; }
-
-  .detail-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 28px; }
-  .detail-kpi { background: var(--bg3); border: 1px solid var(--border); border-radius: 7px; padding: 14px 16px; }
-  .detail-kpi-label { font-size: 10px; color: var(--text3); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 5px; }
-  .detail-kpi-val { font-size: 18px; color: var(--text); font-family: 'Instrument Serif', serif; }
-  .detail-kpi-sub { font-size: 10px; margin-top: 3px; }
-
-  .detail-section { margin-bottom: 28px; }
-  .detail-section-title { font-size: 10px; color: var(--text3); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
-  .detail-body { font-size: 13px; color: var(--text2); line-height: 1.75; }
-
-  .thesis-points-list { list-style: none; }
-  .thesis-points-list li { display: flex; gap: 10px; margin-bottom: 12px; font-size: 13px; color: var(--text2); line-height: 1.65; }
-  .thesis-points-list li::before { content: ''; width: 4px; height: 4px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 8px; }
-
-  .two-col-detail { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  .detail-list { list-style: none; }
-  .detail-list li { display: flex; gap: 8px; margin-bottom: 8px; font-size: 12px; color: var(--text2); line-height: 1.5; }
-  .detail-list li .icon { font-size: 11px; flex-shrink: 0; margin-top: 1px; }
-
-  .catalyst-badge { display: inline-block; background: rgba(90,173,138,0.1); color: var(--green); border: 1px solid rgba(90,173,138,0.25); font-size: 11px; padding: 3px 10px; border-radius: 4px; margin-bottom: 8px; }
+  /* DETAIL */
+  .detail-view { display:none; }
+  .detail-view.active { display:block; }
+  .list-view.hidden { display:none; }
+  .back-btn { background:none; border:none; color:var(--text3); font-family:'DM Mono',monospace; font-size:12px; cursor:pointer; padding:0 0 24px; letter-spacing:.05em; transition:color .15s; }
+  .back-btn:hover { color:var(--accent); }
+  .detail-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:24px; padding-bottom:20px; border-bottom:1px solid var(--border); flex-wrap:wrap; gap:16px; }
+  .detail-ticker { font-family:'Instrument Serif',serif; font-size:44px; color:var(--text); line-height:1; }
+  .detail-name { font-size:13px; color:var(--text3); margin-top:6px; }
+  .detail-industry-badge { font-size:10px; color:var(--text3); border:1px solid var(--border2); border-radius:4px; padding:3px 10px; margin-top:8px; display:inline-block; }
+  .detail-kpis { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:24px; }
+  .detail-kpi { background:var(--bg3); border:1px solid var(--border); border-radius:7px; padding:12px 14px; }
+  .detail-kpi-label { font-size:10px; color:var(--text3); letter-spacing:.08em; text-transform:uppercase; margin-bottom:4px; }
+  .detail-kpi-val { font-size:12px; color:var(--text); }
+  .detail-section { margin-bottom:24px; }
+  .detail-section-title { font-size:10px; color:var(--text3); letter-spacing:.15em; text-transform:uppercase; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid var(--border); }
+  .detail-body { font-size:13px; color:var(--text2); line-height:1.75; }
+  .thesis-points-list { list-style:none; }
+  .thesis-points-list li { display:flex; gap:10px; margin-bottom:10px; font-size:13px; color:var(--text2); line-height:1.65; }
+  .thesis-points-list li::before { content:''; width:4px; height:4px; border-radius:50%; background:var(--accent); flex-shrink:0; margin-top:8px; }
+  .two-col-detail { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .detail-list { list-style:none; }
+  .detail-list li { display:flex; gap:8px; margin-bottom:8px; font-size:12px; color:var(--text2); line-height:1.5; }
+  .detail-actions { display:flex; gap:10px; margin-top:8px; flex-wrap:wrap; }
+  .btn-action { background:none; border:1px solid var(--border2); border-radius:6px; padding:8px 16px; color:var(--text2); font-family:'DM Mono',monospace; font-size:11px; cursor:pointer; transition:all .15s; }
+  .btn-action:hover { border-color:var(--accent); color:var(--accent); }
+  .btn-danger:hover { border-color:var(--red) !important; color:var(--red) !important; }
 
   /* MODAL */
-  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 100; align-items: center; justify-content: center; }
-  .modal-overlay.open { display: flex; }
-  .modal { background: var(--bg2); border: 1px solid var(--border2); border-radius: 12px; padding: 28px 32px; width: 580px; max-height: 85vh; overflow-y: auto; }
-  .modal-title { font-family: 'Instrument Serif', serif; font-size: 22px; color: var(--text); margin-bottom: 20px; }
-  .form-row { margin-bottom: 16px; }
-  .form-label { font-size: 10px; color: var(--text3); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 6px; display: block; }
-  .form-input, .form-select, .form-textarea { width: 100%; background: var(--bg3); border: 1px solid var(--border); border-radius: 6px; padding: 9px 12px; color: var(--text); font-family: 'DM Mono', monospace; font-size: 12px; outline: none; transition: border-color 0.2s; }
-  .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--accent); }
-  .form-select option { background: var(--bg2); }
-  .form-textarea { resize: vertical; min-height: 80px; }
-  .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border); }
-  .btn-cancel { background: none; border: 1px solid var(--border2); border-radius: 6px; padding: 8px 18px; color: var(--text2); font-family: 'DM Mono', monospace; font-size: 12px; cursor: pointer; }
-  .btn-save { background: var(--accent); border: none; border-radius: 6px; padding: 8px 18px; color: #0a0d0f; font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500; cursor: pointer; }
+  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.75); z-index:100; align-items:center; justify-content:center; padding:16px; }
+  .modal-overlay.open { display:flex; }
+  .modal { background:var(--bg2); border:1px solid var(--border2); border-radius:12px; padding:24px 28px; width:100%; max-width:560px; max-height:90vh; overflow-y:auto; }
+  .modal-title { font-family:'Instrument Serif',serif; font-size:22px; color:var(--text); margin-bottom:18px; }
+  .form-row { margin-bottom:14px; }
+  .form-label { font-size:10px; color:var(--text3); letter-spacing:.12em; text-transform:uppercase; margin-bottom:5px; display:block; }
+  .form-input,.form-select,.form-textarea { width:100%; background:var(--bg3); border:1px solid var(--border); border-radius:6px; padding:9px 12px; color:var(--text); font-family:'DM Mono',monospace; font-size:12px; outline:none; transition:border-color .2s; }
+  .form-input:focus,.form-select:focus,.form-textarea:focus { border-color:var(--accent); }
+  .form-select option { background:var(--bg2); }
+  .form-textarea { resize:vertical; min-height:72px; }
+  .form-row-2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .modal-actions { display:flex; gap:10px; justify-content:flex-end; margin-top:20px; padding-top:18px; border-top:1px solid var(--border); }
+  .btn-cancel { background:none; border:1px solid var(--border2); border-radius:6px; padding:8px 18px; color:var(--text2); font-family:'DM Mono',monospace; font-size:12px; cursor:pointer; }
+  .btn-save { background:var(--accent); border:none; border-radius:6px; padding:8px 18px; color:#0a0d0f; font-family:'DM Mono',monospace; font-size:12px; font-weight:500; cursor:pointer; }
 
-  /* NO RESULTS */
-  .no-results { padding: 48px; text-align: center; color: var(--text3); font-size: 13px; }
+  .no-results { padding:48px; text-align:center; color:var(--text3); font-size:13px; }
+  ::-webkit-scrollbar { width:4px; } ::-webkit-scrollbar-track { background:transparent; } ::-webkit-scrollbar-thumb { background:var(--border2); border-radius:3px; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+  .thesis-card { animation:fadeIn .25s ease forwards; }
 
-  /* SCROLLBAR */
-  ::-webkit-scrollbar { width: 5px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
-
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-  .thesis-card { animation: fadeIn 0.3s ease forwards; }
+  /* MOBILE OVERRIDES */
+  @media (max-width:768px) {
+    .sidebar { display:none; }
+    .mobile-topbar { display:flex; }
+    .mobile-nav { display:flex; }
+    .shell { display:block; }
+    .main { padding:16px 16px calc(var(--nav-h) + 20px); margin-top:var(--top-h); max-width:100%; }
+    .page-header { margin-bottom:16px; padding-bottom:14px; }
+    .page-title { font-size:22px; }
+    .stats-row { grid-template-columns:1fr 1fr; gap:8px; margin-bottom:18px; }
+    .stat-val { font-size:18px; }
+    .thesis-card { padding:16px 16px 14px; }
+    .card-ticker { font-size:18px; }
+    .cards-grid { gap:10px; }
+    .detail-ticker { font-size:30px; }
+    .detail-kpis { grid-template-columns:1fr 1fr; gap:8px; }
+    .two-col-detail { grid-template-columns:1fr; }
+    .detail-header { flex-direction:column; gap:10px; }
+    .back-btn { padding:0 0 16px; }
+    .form-row-2 { grid-template-columns:1fr; }
+    .modal { padding:18px; }
+  }
 </style>
 </head>
 <body>
 
+<!-- MOBILE TOP BAR -->
+<div class="mobile-topbar">
+  <div class="mobile-logo">Points of Leverage</div>
+  <div class="mobile-search-wrap">
+    <input class="search-input" type="text" placeholder="Search..." id="mobileSearch" oninput="syncSearch(this)" style="font-size:13px;padding:6px 10px">
+  </div>
+  <button class="mobile-add-btn" onclick="openModal()">+ Add</button>
+</div>
+
+<!-- MOBILE BOTTOM NAV -->
+<nav class="mobile-nav" id="mobileNav">
+  <button class="nav-tab active" id="tab-all" onclick="mobileFilter('all',this)">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>All
+  </button>
+  <button class="nav-tab" id="tab-buy" onclick="mobileFilter('buy',this)">
+    <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>Buy
+  </button>
+  <button class="nav-tab" id="tab-hold" onclick="mobileFilter('hold',this)">
+    <svg viewBox="0 0 24 24"><line x1="5" y1="8" x2="19" y2="8"/><line x1="5" y1="12" x2="19" y2="12"/><line x1="5" y1="16" x2="19" y2="16"/></svg>Hold
+  </button>
+  <button class="nav-tab" id="tab-watch" onclick="mobileFilter('watch',this)">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7z"/></svg>Watch
+  </button>
+  <button class="nav-tab" id="tab-filter" onclick="toggleFilterSheet(this)">
+    <svg viewBox="0 0 24 24"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>Filter
+  </button>
+</nav>
+
+<!-- MOBILE FILTER SHEET -->
+<div class="filter-sheet" id="filterSheet">
+  <div class="filter-sheet-title">Industry</div>
+  <div class="filter-chips" id="industryChips"></div>
+</div>
+
 <div class="shell">
-  <!-- SIDEBAR -->
+  <!-- DESKTOP SIDEBAR -->
   <aside class="sidebar">
     <div class="sidebar-header">
-      <div class="logo">Equity Journal</div>
-      <div class="logo-sub">Private · Pictet WM</div>
+      <div class="logo">Points of Leverage</div>
+      <div class="logo-sub">Investment Journal</div>
     </div>
-
     <div class="sidebar-search">
-      <input class="search-input" type="text" placeholder="Search ticker, name..." id="searchInput" oninput="applyFilters()">
+      <input class="search-input" type="text" placeholder="Search ticker, name..." id="desktopSearch" oninput="syncSearch(this)">
     </div>
-
     <div class="sidebar-section">View</div>
     <button class="filter-btn active" onclick="setFilter('view','all',this)">All positions <span class="filter-count" id="count-all">0</span></button>
     <button class="filter-btn" onclick="setFilter('view','buy',this)">Add / Buy <span class="filter-count" id="count-buy">0</span></button>
     <button class="filter-btn" onclick="setFilter('view','hold',this)">Hold <span class="filter-count" id="count-hold">0</span></button>
     <button class="filter-btn" onclick="setFilter('view','watch',this)">Watch <span class="filter-count" id="count-watch">0</span></button>
-
     <div class="sidebar-section" style="margin-top:12px">Industry</div>
     <div id="industryFilters"></div>
-
     <div style="flex:1"></div>
     <button class="add-btn" onclick="openModal()">+ New thesis</button>
   </aside>
 
-  <!-- MAIN -->
   <main class="main">
-    <!-- LIST VIEW -->
     <div class="list-view" id="listView">
       <div class="page-header">
         <div class="page-title">Investment Theses</div>
         <div class="page-meta" id="pageMeta"></div>
       </div>
-
       <div class="stats-row" id="statsRow"></div>
-
       <div class="cards-grid" id="cardsGrid"></div>
       <div class="no-results" id="noResults" style="display:none">No positions match your filters.</div>
     </div>
-
-    <!-- DETAIL VIEW -->
     <div class="detail-view" id="detailView">
-      <button class="back-btn" onclick="showList()">← Back to all positions</button>
+      <button class="back-btn" onclick="showList()">← Back</button>
       <div id="detailContent"></div>
     </div>
   </main>
 </div>
 
-<!-- ADD MODAL -->
+<!-- MODAL -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal">
     <div class="modal-title">New Thesis</div>
     <div class="form-row-2">
-      <div class="form-row">
-        <label class="form-label">Ticker</label>
-        <input class="form-input" id="f-ticker" placeholder="e.g. NVDA" style="text-transform:uppercase">
-      </div>
-      <div class="form-row">
-        <label class="form-label">Company name</label>
-        <input class="form-input" id="f-name" placeholder="e.g. Nvidia Corp">
-      </div>
+      <div class="form-row"><label class="form-label">Ticker</label><input class="form-input" id="f-ticker" placeholder="NVDA" style="text-transform:uppercase"></div>
+      <div class="form-row"><label class="form-label">Company name</label><input class="form-input" id="f-name" placeholder="Nvidia Corp"></div>
     </div>
     <div class="form-row-2">
-      <div class="form-row">
-        <label class="form-label">Industry</label>
-        <input class="form-input" id="f-industry" placeholder="e.g. Semiconductors">
-      </div>
-      <div class="form-row">
-        <label class="form-label">View</label>
+      <div class="form-row"><label class="form-label">Industry</label><input class="form-input" id="f-industry" placeholder="Semiconductors"></div>
+      <div class="form-row"><label class="form-label">View</label>
         <select class="form-select" id="f-view">
           <option value="buy">Add / Buy</option>
           <option value="hold">Hold</option>
@@ -242,439 +259,241 @@
       </div>
     </div>
     <div class="form-row-2">
-      <div class="form-row">
-        <label class="form-label">Current price</label>
-        <input class="form-input" id="f-price" placeholder="e.g. $90.39">
-      </div>
-      <div class="form-row">
-        <label class="form-label">Price target</label>
-        <input class="form-input" id="f-target" placeholder="e.g. $145">
-      </div>
+      <div class="form-row"><label class="form-label">Current price</label><input class="form-input" id="f-price" placeholder="$90.39"></div>
+      <div class="form-row"><label class="form-label">Price target</label><input class="form-input" id="f-target" placeholder="$145"></div>
     </div>
-    <div class="form-row">
-      <label class="form-label">Investment summary (1–2 sentences)</label>
-      <textarea class="form-textarea" id="f-summary" placeholder="Core reason to own this stock..."></textarea>
-    </div>
-    <div class="form-row">
-      <label class="form-label">Key thesis points (one per line)</label>
-      <textarea class="form-textarea" id="f-points" placeholder="Revenue inflection&#10;Dominant market share&#10;AI tailwind..."></textarea>
-    </div>
+    <div class="form-row"><label class="form-label">Investment summary</label><textarea class="form-textarea" id="f-summary" placeholder="Core reason to own..."></textarea></div>
+    <div class="form-row"><label class="form-label">Thesis points (one per line)</label><textarea class="form-textarea" id="f-points" placeholder="Revenue inflection&#10;Market dominance..."></textarea></div>
     <div class="form-row-2">
-      <div class="form-row">
-        <label class="form-label">Key risks (one per line)</label>
-        <textarea class="form-textarea" id="f-risks" placeholder="Competition&#10;Valuation premium..."></textarea>
-      </div>
-      <div class="form-row">
-        <label class="form-label">Catalysts (one per line)</label>
-        <textarea class="form-textarea" id="f-catalysts" placeholder="Q1 earnings&#10;Trial readout..."></textarea>
-      </div>
+      <div class="form-row"><label class="form-label">Risks (one per line)</label><textarea class="form-textarea" id="f-risks" placeholder="Competition&#10;Valuation..."></textarea></div>
+      <div class="form-row"><label class="form-label">Catalysts (one per line)</label><textarea class="form-textarea" id="f-catalysts" placeholder="Q1 earnings&#10;Trial readout..."></textarea></div>
     </div>
-    <div class="form-row">
-      <label class="form-label">Key financials (one per line, e.g. "FY25 Revenue: $22.9B +36%")</label>
-      <textarea class="form-textarea" id="f-financials" placeholder="FY25 Revenue: $22.9B +36%&#10;Net Income: $1.6B +260%..."></textarea>
-    </div>
+    <div class="form-row"><label class="form-label">Key financials (one per line)</label><textarea class="form-textarea" id="f-financials" placeholder="FY25 Revenue: $22.9B +36%&#10;Net Income: $1.6B +260%..."></textarea></div>
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closeModal()">Cancel</button>
-      <button class="btn-save" onclick="saveThesis()">Save thesis</button>
+      <button class="btn-save" onclick="saveThesis()">Save</button>
     </div>
   </div>
 </div>
 
 <script>
-const STORAGE_KEY = 'equity_journal_v1';
-
-const SEED_DATA = [
-  {
-    id: 'SE',
-    ticker: 'SE',
-    name: 'Sea Limited',
-    industry: 'Consumer Internet',
-    view: 'buy',
-    price: '$90.39',
-    target: '$145–180',
-    upside: '+52–99%',
-    upsideClass: 'pos',
-    date: 'Mar 2026',
-    summary: 'Southeast Asia\'s dominant tri-segment internet company — e-commerce (Shopee), fintech (SeaMoney), and gaming (Garena) — all profitable simultaneously for the first time. Sold off on EPS optics, not fundamental deterioration.',
-    points: [
-      'FY25 revenue +36% to $22.9B; net income tripled to $1.6B (+260% YoY) — all three segments profitable simultaneously for the first time.',
-      'Shopee EBITDA inflected from $156M to $881M in a single year. Advertising and logistics monetisation still early innings.',
-      'SeaMoney loan book +80% to $9.2B with NPL stable at 1.1% — fastest-growing fintech in a massively underbanked region.',
-      'Google AI partnership (Feb 2026) for agentic shopping on Shopee, AI in Garena, and AP2 payment protocol. OpenAI MOU also in place.',
-      '$1B buyback running. Market re-rated on EPS miss driven by deliberate reinvestment — the thesis is intact.'
-    ],
-    risks: [
-      'TikTok Shop & Lazada intensifying SEA competition',
-      'Credit provisions rising as loan book scales fast',
-      'EPS guidance reset may weigh near-term',
-      'Macro slowdown in EM consumer spending'
-    ],
-    catalysts: [
-      'Q1 2026 results — margin progression signal',
-      'Agentic AI on Shopee: pilot launch metrics',
-      'SeaMoney NPL stability as book matures',
-      'Potential Garena re-rating if Free Fire 2 lands'
-    ],
-    financials: [
-      'FY25 Revenue: $22.9B (+36% YoY)',
-      'FY25 Net Income: $1.6B (+260% YoY)',
-      'FY25 Adj. EBITDA: $3.4B (+75% YoY)',
-      'SeaMoney Loan Book: $9.2B (+80% YoY)',
-      'Shopee GMV: >$100B',
-      'Consensus Target: $145–180 (+52–99%)'
-    ]
-  },
-  {
-    id: 'GLEN',
-    ticker: 'GLEN',
-    name: 'Glencore plc',
-    industry: 'Metals & Mining',
-    view: 'buy',
-    price: '~390p / $7.11',
-    target: '500–550p',
-    upside: '+28–41%',
-    upsideClass: 'pos',
-    date: 'Mar 2026',
-    summary: 'The world\'s largest diversified commodities company — uniquely combining a mining business with a global trading operation across 60+ commodities. Structurally positioned for the energy transition via copper and cobalt, while coal cash flows fund shareholder returns today. Up 20% YTD in 2026 but the long-term thesis is still early innings.',
-    points: [
-      'Copper production pathway to 1 million tonnes by end-2028 and 1.6 million tonnes by 2035 — one of the largest copper growth profiles globally. AI infrastructure and energy transition demand underpin a structural multi-year copper deficit.',
-      'The trading business is unique and irreplaceable — $2.3–3.5B annual Marketing EBIT guidance underpins returns through commodity cycles regardless of price direction. No other listed miner has this embedded earnings floor.',
-      'Coal cash flows — while politically controversial — are funding the copper build-out and shareholder distributions. FY2025 annualised free cash flow at spot prices: ~$7B. $0.17/share distribution proposed for 2026.',
-      'Cobalt optionality: DRC export quotas are easing, with 87,000 tonnes/year allocated for 2026–2027. Stockpiled inventory ready for export. Cobalt is critical for EV batteries — Glencore is the world\'s largest producer.',
-      'Rio Tinto merger speculation adds a potential re-rating catalyst. Under UK M&A rules a bid approach was live in early 2026. Even without a deal, the attention validates the asset quality and strategic value of the portfolio.'
-    ],
-    risks: [
-      'Commodity price volatility — copper, coal, and cobalt all cyclical',
-      'China slowdown would materially impact metals demand',
-      'DRC political/operational risk at KCC and Mutanda',
-      'Coal ESG overhang — some institutional investors restricted',
-      'Copper production guidance has been missed historically',
-      'Rio Tinto deal uncertainty — walk-away also possible'
-    ],
-    catalysts: [
-      'Copper volume ramp H2 2026 — grade recovery at Collahuasi and KCC',
-      'Cobalt export quota utilisation — stockpile monetisation begins',
-      'Rio Tinto merger update / formal bid announcement',
-      'Capital Markets Day copper production updates',
-      'Sustained copper price above $10,000/t unlocks project optionality',
-      'Alumbrera restart targeted H1 2028 — 75kt copper + 317koz gold'
-    ],
-    financials: [
-      'Market Cap: ~$82B',
-      'FY25 Revenue: ~$248B (trading + industrial)',
-      'FY25 Annualised FCF at spot: ~$7B',
-      'Marketing EBIT guidance: $2.3–3.5B p.a.',
-      'FY25 Copper production: 851,600t',
-      '2035 Copper target: 1.6 million tonnes',
-      'Distribution: $0.17/share (2025, paid 2026)'
-    ]
-  },
-  {
-    id: 'BSX',
-    ticker: 'BSX',
-    name: 'Boston Scientific',
-    industry: 'MedTech',
-    view: 'hold',
-    price: '~$78',
-    target: '$105',
-    upside: '+35%',
-    upsideClass: 'pos',
-    date: 'Mar 2026',
-    summary: 'World-class cardiac device maker behind FARAPULSE (AFib treatment) and WATCHMAN (stroke prevention). Sold off on competition fears and a growth guidance cut from 20% to 11% — but free cash flow, margins, and the long-term patient opportunity remain entirely intact.',
-    points: [
-      'FY25 revenue +16% to $20.1B — 12 consecutive quarters of double-digit growth. FCF grew 38% to $3.7B; guided $4.2B for 2026.',
-      'FARAPULSE holds ~70% US market share in pulsed field ablation — a new way to treat atrial fibrillation. Competition arrived (Medtronic) but addressable market is still expanding globally.',
-      'WATCHMAN: only 600K of an estimated 5M eligible patients treated. CHAMPION trial readout on 28 Mar 2026 could expand addressable pool to 20M — an almost entirely unpriced catalyst.',
-      'Penumbra acquisition adds high-growth neurovascular segment. Dilutive near-term but strategically sound; adds a third compounding engine.',
-      '25 of 35 analysts rate BSX a Buy; zero sell ratings. Consensus target ~$105 implies ~35% upside from current levels.'
-    ],
-    risks: [
-      'Medtronic competing device offers dual-energy mode — could take share in new hospital accounts',
-      'Penumbra leverage (3.3x EBITDA peak) limits financial flexibility near-term',
-      'Class action lawsuits (routine post-selloff but add noise)',
-      'CHAMPION trial risk — binary catalyst could disappoint',
-      'Premium valuation still: ~28x forward earnings'
-    ],
-    catalysts: [
-      '28 Mar 2026: CHAMPION trial readout — potential to expand WATCHMAN market 4x',
-      'Q1 2026 results: margin stabilisation signal',
-      'Penumbra deal close and integration update',
-      'FARAPULSE international adoption metrics',
-      'WATCHMAN concomitant procedure growth data'
-    ],
-    financials: [
-      'FY25 Revenue: $20.1B (+16% YoY)',
-      'FY25 Free Cash Flow: $3.7B (+38% YoY)',
-      'FY26E Revenue: $22.3B (+11%)',
-      'FY26E Adj. EPS: $3.46 (+13%)',
-      'EBIT Margin: 28% (expanding)',
-      'Consensus Target: ~$105 (+35%)'
-    ]
-  }
+const STORAGE_KEY='pol_v1';
+const SEED=[
+  {id:'SE',ticker:'SE',name:'Sea Limited',industry:'Consumer Internet',view:'buy',price:'$90.39',target:'$145–180',upside:'+52–99%',upsideClass:'pos',date:'Mar 2026',
+    summary:'Southeast Asia\'s dominant tri-segment internet company — e-commerce (Shopee), fintech (SeaMoney), and gaming (Garena) — all profitable simultaneously for the first time. Sold off on EPS optics, not fundamental deterioration.',
+    points:['FY25 revenue +36% to $22.9B; net income tripled to $1.6B (+260% YoY). All three segments profitable simultaneously for the first time.','Shopee EBITDA inflected from $156M to $881M in a single year. Advertising and logistics monetisation still early innings.','SeaMoney loan book +80% to $9.2B with NPL stable at 1.1% — fastest-growing fintech in a massively underbanked region.','Google AI partnership (Feb 2026) for agentic shopping on Shopee, Garena AI, and AP2 payment protocol. OpenAI MOU also in place.','$1B buyback running. Market re-rated on EPS miss driven by deliberate reinvestment — the thesis is intact.'],
+    risks:['TikTok Shop & Lazada intensifying SEA competition','Credit provisions rising as loan book scales fast','EPS guidance reset may weigh near-term','Macro slowdown in EM consumer spending'],
+    catalysts:['Q1 2026 results — margin progression signal','Agentic AI on Shopee: pilot launch metrics','SeaMoney NPL stability as book matures','Potential Garena re-rating if Free Fire 2 lands'],
+    financials:['FY25 Revenue: $22.9B (+36% YoY)','FY25 Net Income: $1.6B (+260% YoY)','FY25 Adj. EBITDA: $3.4B (+75% YoY)','SeaMoney Loan Book: $9.2B (+80%)','Shopee GMV: >$100B','Consensus Target: $145–180']},
+  {id:'BSX',ticker:'BSX',name:'Boston Scientific',industry:'MedTech',view:'hold',price:'~$78',target:'$105',upside:'+35%',upsideClass:'pos',date:'Mar 2026',
+    summary:'World-class cardiac device maker behind FARAPULSE (AFib treatment) and WATCHMAN (stroke prevention). Sold off on competition fears and a growth guidance cut from 20% to 11% — FCF, margins, and the long-term patient opportunity remain intact.',
+    points:['FY25 revenue +16% to $20.1B — 12 consecutive quarters of double-digit growth. FCF grew 38% to $3.7B; guided $4.2B for 2026.','FARAPULSE holds ~70% US market in pulsed field ablation. Competition arrived (Medtronic) but addressable market still expanding globally.','WATCHMAN: only 600K of 5M eligible patients treated. CHAMPION trial (28 Mar 2026) could expand the pool to 20M — almost entirely unpriced.','Penumbra acquisition adds high-growth neurovascular segment. Dilutive near-term but strategically sound.','25 of 35 analysts rate BSX a Buy; zero sell ratings. Consensus target ~$105 implies ~35% upside.'],
+    risks:['Medtronic dual-energy device could take share in new hospital accounts','Penumbra leverage (3.3x EBITDA peak) limits near-term flexibility','Class action lawsuits (routine post-selloff but add noise)','CHAMPION trial risk — binary catalyst could disappoint'],
+    catalysts:['28 Mar 2026: CHAMPION trial — potential 4x WATCHMAN market expansion','Q1 2026 results: margin stabilisation signal','Penumbra deal close and integration update','FARAPULSE international adoption metrics'],
+    financials:['FY25 Revenue: $20.1B (+16% YoY)','FY25 FCF: $3.7B (+38% YoY)','FY26E Revenue: $22.3B (+11%)','FY26E Adj. EPS: $3.46 (+13%)','EBIT Margin: 28% expanding','Consensus Target: ~$105 (+35%)']},
+  {id:'GLEN',ticker:'GLEN',name:'Glencore plc',industry:'Metals & Mining',view:'buy',price:'~390p / $7.11',target:'500–550p',upside:'+28–41%',upsideClass:'pos',date:'Mar 2026',
+    summary:'The world\'s largest diversified commodities company — uniquely combining a mining business with a global trading operation across 60+ commodities. Structurally positioned for the energy transition via copper and cobalt, while coal cash flows fund shareholder returns today.',
+    points:['Copper production pathway to 1 million tonnes by end-2028 and 1.6 million tonnes by 2035 — one of the largest copper growth profiles globally. AI infrastructure and energy transition demand underpin a structural multi-year copper deficit.','The trading business is unique and irreplaceable — $2.3–3.5B annual Marketing EBIT underpins returns through commodity cycles. No other listed miner has this embedded earnings floor.','Coal cash flows fund the copper build-out and shareholder distributions. FY2025 annualised FCF at spot prices: ~$7B. $0.17/share distribution proposed for 2026.','Cobalt optionality: DRC export quotas easing with 87,000 tonnes/year allocated for 2026–2027. Glencore is the world\'s largest cobalt producer — stockpiled inventory ready to sell.','Rio Tinto merger speculation adds a potential re-rating catalyst. Even without a deal, the attention validates the asset quality of the portfolio.'],
+    risks:['Commodity price volatility — copper, coal, and cobalt all cyclical','China slowdown would materially impact metals demand','DRC political/operational risk at KCC and Mutanda','Coal ESG overhang — some institutional investors restricted','Copper production guidance has been missed historically'],
+    catalysts:['Copper volume ramp H2 2026 — grade recovery at Collahuasi and KCC','Cobalt export quota utilisation — stockpile monetisation begins','Rio Tinto merger update / formal bid announcement','Sustained copper price above $10,000/t unlocks project optionality','Alumbrera restart targeted H1 2028 — 75kt copper + 317koz gold'],
+    financials:['Market Cap: ~$82B','FY25 Revenue: ~$248B','Annualised FCF at spot: ~$7B','Marketing EBIT guidance: $2.3–3.5B p.a.','FY25 Copper production: 851,600t','2035 Copper target: 1.6 million tonnes','Distribution: $0.17/share (2025, paid 2026)']}
 ];
 
-let theses = [];
-let activeViewFilter = 'all';
-let activeIndustryFilter = 'all';
+let theses=[],activeView='all',activeIndustry='all';
 
-function load() {
-  const stored = localStorage.getItem(STORAGE_KEY);
-  if (stored) {
-    theses = JSON.parse(stored);
-  } else {
-    theses = JSON.parse(JSON.stringify(SEED_DATA));
-    save();
-  }
+function load(){const s=localStorage.getItem(STORAGE_KEY);theses=s?JSON.parse(s):JSON.parse(JSON.stringify(SEED));if(!s)save();}
+function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(theses));}
+
+function getQuery(){
+  const isMobile=window.innerWidth<=768;
+  const el=document.getElementById(isMobile?'mobileSearch':'desktopSearch');
+  return el?el.value.toLowerCase():'';
+}
+function syncSearch(el){
+  const other=document.getElementById(el.id==='desktopSearch'?'mobileSearch':'desktopSearch');
+  if(other)other.value=el.value;
+  renderCards();
 }
 
-function save() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(theses));
-}
-
-function getFiltered() {
-  const q = document.getElementById('searchInput').value.toLowerCase();
-  return theses.filter(t => {
-    const matchView = activeViewFilter === 'all' || t.view === activeViewFilter;
-    const matchIndustry = activeIndustryFilter === 'all' || t.industry === activeIndustryFilter;
-    const matchSearch = !q || t.ticker.toLowerCase().includes(q) || t.name.toLowerCase().includes(q) || t.industry.toLowerCase().includes(q);
-    return matchView && matchIndustry && matchSearch;
+function getFiltered(){
+  const q=getQuery();
+  return theses.filter(t=>{
+    const mv=activeView==='all'||t.view===activeView;
+    const mi=activeIndustry==='all'||t.industry===activeIndustry;
+    const mq=!q||t.ticker.toLowerCase().includes(q)||t.name.toLowerCase().includes(q)||t.industry.toLowerCase().includes(q);
+    return mv&&mi&&mq;
   });
 }
 
-function renderStats() {
-  const buys = theses.filter(t => t.view === 'buy').length;
-  const holds = theses.filter(t => t.view === 'hold').length;
-  const watches = theses.filter(t => t.view === 'watch').length;
-  const industries = [...new Set(theses.map(t => t.industry))].length;
-  document.getElementById('statsRow').innerHTML = `
-    <div class="stat-card"><div class="stat-label">Total positions</div><div class="stat-val">${theses.length}</div><div class="stat-sub">across ${industries} industries</div></div>
-    <div class="stat-card"><div class="stat-label">Buy / Add</div><div class="stat-val" style="color:var(--green)">${buys}</div><div class="stat-sub">conviction longs</div></div>
-    <div class="stat-card"><div class="stat-label">Hold</div><div class="stat-val" style="color:var(--accent)">${holds}</div><div class="stat-sub">maintain exposure</div></div>
-    <div class="stat-card"><div class="stat-label">Watch</div><div class="stat-val" style="color:var(--orange)">${watches}</div><div class="stat-sub">monitoring</div></div>
-  `;
-  document.getElementById('pageMeta').textContent = `${theses.length} theses · Last updated ${new Date().toLocaleDateString('en-GB', {day:'numeric', month:'short', year:'numeric'})}`;
+function renderStats(){
+  const b=theses.filter(t=>t.view==='buy').length,h=theses.filter(t=>t.view==='hold').length,w=theses.filter(t=>t.view==='watch').length;
+  const ind=new Set(theses.map(t=>t.industry)).size;
+  document.getElementById('statsRow').innerHTML=`
+    <div class="stat-card"><div class="stat-label">Positions</div><div class="stat-val">${theses.length}</div><div class="stat-sub">${ind} industries</div></div>
+    <div class="stat-card"><div class="stat-label">Buy</div><div class="stat-val" style="color:var(--green)">${b}</div><div class="stat-sub">conviction longs</div></div>
+    <div class="stat-card"><div class="stat-label">Hold</div><div class="stat-val" style="color:var(--accent)">${h}</div><div class="stat-sub">maintain</div></div>
+    <div class="stat-card"><div class="stat-label">Watch</div><div class="stat-val" style="color:var(--orange)">${w}</div><div class="stat-sub">monitoring</div></div>`;
+  document.getElementById('pageMeta').textContent=`${theses.length} theses · ${new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}`;
 }
 
-function renderIndustryFilters() {
-  const industries = [...new Set(theses.map(t => t.industry))].sort();
-  const container = document.getElementById('industryFilters');
-  const counts = {};
-  theses.forEach(t => { counts[t.industry] = (counts[t.industry] || 0) + 1; });
-  let html = `<button class="filter-btn ${activeIndustryFilter === 'all' ? 'active' : ''}" onclick="setIndustryFilter('all',this)">All industries</button>`;
-  industries.forEach(ind => {
-    html += `<button class="filter-btn ${activeIndustryFilter === ind ? 'active' : ''}" onclick="setIndustryFilter('${ind}',this)">${ind} <span class="filter-count">${counts[ind]}</span></button>`;
-  });
-  container.innerHTML = html;
+function renderIndustryFilters(){
+  const industries=[...new Set(theses.map(t=>t.industry))].sort();
+  const counts={};theses.forEach(t=>{counts[t.industry]=(counts[t.industry]||0)+1;});
+  let html=`<button class="filter-btn ${activeIndustry==='all'?'active':''}" onclick="setFilter('industry','all',this)">All industries</button>`;
+  industries.forEach(ind=>{html+=`<button class="filter-btn ${activeIndustry===ind?'active':''}" onclick="setFilter('industry','${ind}',this)">${ind} <span class="filter-count">${counts[ind]}</span></button>`;});
+  document.getElementById('industryFilters').innerHTML=html;
+  let chips=`<div class="chip ${activeIndustry==='all'?'active':''}" onclick="mobileIndustry('all',this)">All</div>`;
+  industries.forEach(ind=>{chips+=`<div class="chip ${activeIndustry===ind?'active':''}" onclick="mobileIndustry('${ind}',this)">${ind}</div>`;});
+  document.getElementById('industryChips').innerHTML=chips;
 }
 
-function updateCounts() {
-  document.getElementById('count-all').textContent = theses.length;
-  document.getElementById('count-buy').textContent = theses.filter(t => t.view === 'buy').length;
-  document.getElementById('count-hold').textContent = theses.filter(t => t.view === 'hold').length;
-  document.getElementById('count-watch').textContent = theses.filter(t => t.view === 'watch').length;
+function updateCounts(){
+  document.getElementById('count-all').textContent=theses.length;
+  document.getElementById('count-buy').textContent=theses.filter(t=>t.view==='buy').length;
+  document.getElementById('count-hold').textContent=theses.filter(t=>t.view==='hold').length;
+  document.getElementById('count-watch').textContent=theses.filter(t=>t.view==='watch').length;
 }
 
-function renderCards() {
-  const filtered = getFiltered();
-  const grid = document.getElementById('cardsGrid');
-  const noResults = document.getElementById('noResults');
-  if (filtered.length === 0) { grid.innerHTML = ''; noResults.style.display = 'block'; return; }
-  noResults.style.display = 'none';
-  grid.innerHTML = filtered.map((t, i) => `
-    <div class="thesis-card ${t.view}" onclick="showDetail('${t.id}')" style="animation-delay:${i * 0.05}s">
+function renderCards(){
+  const filtered=getFiltered();
+  const grid=document.getElementById('cardsGrid');
+  const no=document.getElementById('noResults');
+  if(!filtered.length){grid.innerHTML='';no.style.display='block';return;}
+  no.style.display='none';
+  const vl=v=>v==='buy'?'Add / Buy':v==='hold'?'Hold':'Watch';
+  grid.innerHTML=filtered.map((t,i)=>`
+    <div class="thesis-card ${t.view}" onclick="showDetail('${t.id}')" style="animation-delay:${i*.04}s">
       <div class="card-top">
-        <div>
-          <div class="card-ticker">${t.ticker}</div>
-          <div class="card-name">${t.name}</div>
-        </div>
+        <div><div class="card-ticker">${t.ticker}</div><div class="card-name">${t.name}</div></div>
         <div class="card-right">
-          <span class="card-view ${t.view}">${t.view === 'buy' ? 'Add / Buy' : t.view === 'hold' ? 'Hold' : 'Watch'}</span>
+          <span class="card-view ${t.view}">${vl(t.view)}</span>
           <div class="card-price">${t.price} → ${t.target}</div>
           <div class="card-upside ${t.upsideClass}">${t.upside}</div>
         </div>
       </div>
       <div class="card-thesis">${t.summary}</div>
-      <div class="card-points">
-        ${t.points.slice(0,2).map(p => `<div class="point-row"><div class="point-dot"></div><div>${p}</div></div>`).join('')}
-      </div>
-      <div class="card-meta">
-        <span class="card-industry">${t.industry}</span>
-        <span class="card-date">${t.date}</span>
-      </div>
-    </div>
-  `).join('');
+      <div>${t.points.slice(0,2).map(p=>`<div class="point-row"><div class="point-dot"></div><div>${p}</div></div>`).join('')}</div>
+      <div class="card-meta"><span>${t.industry}</span><span>${t.date}</span></div>
+    </div>`).join('');
 }
 
-function renderAll() {
-  renderStats();
-  renderIndustryFilters();
-  updateCounts();
+function renderAll(){renderStats();renderIndustryFilters();updateCounts();renderCards();}
+
+function setFilter(type,val,btn){
+  if(type==='view'){activeView=val;document.querySelectorAll('.sidebar .filter-btn').forEach(b=>b.classList.remove('active'));}
+  else{activeIndustry=val;}
+  if(btn)btn.classList.add('active');
   renderCards();
 }
 
-function setFilter(type, val, btn) {
-  activeViewFilter = val;
-  document.querySelectorAll('.sidebar .filter-btn').forEach(b => b.classList.remove('active'));
+function mobileFilter(val,btn){
+  activeView=val;
+  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
+  document.getElementById('filterSheet').classList.remove('open');
   renderCards();
 }
 
-function setIndustryFilter(val, btn) {
-  activeIndustryFilter = val;
-  document.querySelectorAll('#industryFilters .filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderCards();
+function mobileIndustry(val,el){
+  activeIndustry=val;
+  document.querySelectorAll('.filter-chips .chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  renderIndustryFilters();renderCards();
 }
 
-function applyFilters() { renderCards(); }
+function toggleFilterSheet(btn){
+  const sheet=document.getElementById('filterSheet');
+  const wasOpen=sheet.classList.contains('open');
+  sheet.classList.toggle('open');
+  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
+  if(!wasOpen)btn.classList.add('active');
+  else document.getElementById(`tab-${activeView}`).classList.add('active');
+}
 
-function showDetail(id) {
-  const t = theses.find(x => x.id === id);
-  if (!t) return;
+function showDetail(id){
+  const t=theses.find(x=>x.id===id);if(!t)return;
   document.getElementById('listView').classList.add('hidden');
-  document.getElementById('detailView').classList.add('active');
-  const kpiRows = (t.financials || []).map(f => {
-    const parts = f.split(':');
-    return `<div class="detail-kpi"><div class="detail-kpi-label">${parts[0]}</div><div class="detail-kpi-val" style="font-size:14px;font-family:'DM Mono',monospace">${parts[1] || ''}</div></div>`;
-  }).join('');
-  document.getElementById('detailContent').innerHTML = `
+  const dv=document.getElementById('detailView');
+  dv.classList.add('active');
+  const vl=v=>v==='buy'?'Add / Buy':v==='hold'?'Hold':'Watch';
+  const kpis=(t.financials||[]).map(f=>{const p=f.split(':');return`<div class="detail-kpi"><div class="detail-kpi-label">${p[0]}</div><div class="detail-kpi-val">${p[1]||''}</div></div>`;}).join('');
+  document.getElementById('detailContent').innerHTML=`
     <div class="detail-header">
       <div>
         <div class="detail-ticker">${t.ticker}</div>
         <div class="detail-name">${t.name}</div>
         <div class="detail-industry-badge">${t.industry}</div>
       </div>
-      <div style="text-align:right">
-        <span class="card-view ${t.view}" style="font-size:11px;padding:5px 14px">${t.view === 'buy' ? 'Add / Buy' : t.view === 'hold' ? 'Hold' : 'Watch'}</span>
-        <div style="font-size:18px;color:var(--text);margin-top:8px;font-family:'Instrument Serif',serif">${t.price} <span style="font-size:13px;color:var(--text3)">→ ${t.target}</span></div>
+      <div>
+        <span class="card-view ${t.view}" style="font-size:11px;padding:5px 14px">${vl(t.view)}</span>
+        <div style="font-size:20px;color:var(--text);margin-top:8px;font-family:'Instrument Serif',serif">${t.price} <span style="font-size:13px;color:var(--text3)">→ ${t.target}</span></div>
         <div class="card-upside ${t.upsideClass}" style="font-size:13px;margin-top:3px">${t.upside} implied upside</div>
-        <div style="font-size:10px;color:var(--text3);margin-top:5px">${t.date}</div>
+        <div style="font-size:10px;color:var(--text3);margin-top:4px">${t.date}</div>
       </div>
     </div>
-
-    <div class="detail-section">
-      <div class="detail-section-title">Investment summary</div>
-      <div class="detail-body">${t.summary}</div>
-    </div>
-
-    ${kpiRows ? `<div class="detail-section"><div class="detail-section-title">Key financials</div><div class="detail-kpis">${kpiRows}</div></div>` : ''}
-
-    <div class="detail-section">
-      <div class="detail-section-title">Thesis — key points</div>
-      <ul class="thesis-points-list">${t.points.map(p => `<li>${p}</li>`).join('')}</ul>
-    </div>
-
+    <div class="detail-section"><div class="detail-section-title">Investment summary</div><div class="detail-body">${t.summary}</div></div>
+    ${kpis?`<div class="detail-section"><div class="detail-section-title">Key financials</div><div class="detail-kpis">${kpis}</div></div>`:''}
+    <div class="detail-section"><div class="detail-section-title">Thesis — key points</div><ul class="thesis-points-list">${t.points.map(p=>`<li>${p}</li>`).join('')}</ul></div>
     <div class="two-col-detail">
-      <div class="detail-section">
-        <div class="detail-section-title">Risks</div>
-        <ul class="detail-list">${t.risks.map(r => `<li><span class="icon" style="color:var(--red)">▸</span>${r}</li>`).join('')}</ul>
-      </div>
-      <div class="detail-section">
-        <div class="detail-section-title">Catalysts</div>
-        <ul class="detail-list">${t.catalysts.map(c => `<li><span class="icon" style="color:var(--green)">▸</span>${c}</li>`).join('')}</ul>
-      </div>
+      <div class="detail-section"><div class="detail-section-title">Risks</div><ul class="detail-list">${t.risks.map(r=>`<li><span style="color:var(--red);margin-right:4px">▸</span>${r}</li>`).join('')}</ul></div>
+      <div class="detail-section"><div class="detail-section-title">Catalysts</div><ul class="detail-list">${t.catalysts.map(c=>`<li><span style="color:var(--green);margin-right:4px">▸</span>${c}</li>`).join('')}</ul></div>
     </div>
-
-    <div style="display:flex;gap:10px;margin-top:8px">
-      <button class="btn-cancel" onclick="editThesis('${t.id}')" style="font-size:11px">Edit thesis</button>
-      <button class="btn-cancel" onclick="deleteThesis('${t.id}')" style="font-size:11px;color:var(--red);border-color:var(--red)">Delete</button>
-    </div>
-  `;
-  window.scrollTo(0, 0);
+    <div class="detail-actions">
+      <button class="btn-action" onclick="editThesis('${t.id}')">Edit</button>
+      <button class="btn-action btn-danger" onclick="deleteThesis('${t.id}')">Delete</button>
+    </div>`;
+  window.scrollTo(0,0);
 }
 
-function showList() {
+function showList(){
   document.getElementById('listView').classList.remove('hidden');
   document.getElementById('detailView').classList.remove('active');
 }
 
-function openModal(prefill) {
-  if (prefill) {
-    document.getElementById('f-ticker').value = prefill.ticker || '';
-    document.getElementById('f-name').value = prefill.name || '';
-    document.getElementById('f-industry').value = prefill.industry || '';
-    document.getElementById('f-view').value = prefill.view || 'buy';
-    document.getElementById('f-price').value = prefill.price || '';
-    document.getElementById('f-target').value = prefill.target || '';
-    document.getElementById('f-summary').value = prefill.summary || '';
-    document.getElementById('f-points').value = (prefill.points || []).join('\n');
-    document.getElementById('f-risks').value = (prefill.risks || []).join('\n');
-    document.getElementById('f-catalysts').value = (prefill.catalysts || []).join('\n');
-    document.getElementById('f-financials').value = (prefill.financials || []).join('\n');
-    document.getElementById('modalOverlay').dataset.editId = prefill.id || '';
-  } else {
-    document.getElementById('f-ticker').value = '';
-    document.getElementById('f-name').value = '';
-    document.getElementById('f-industry').value = '';
-    document.getElementById('f-view').value = 'buy';
-    document.getElementById('f-price').value = '';
-    document.getElementById('f-target').value = '';
-    document.getElementById('f-summary').value = '';
-    document.getElementById('f-points').value = '';
-    document.getElementById('f-risks').value = '';
-    document.getElementById('f-catalysts').value = '';
-    document.getElementById('f-financials').value = '';
-    document.getElementById('modalOverlay').dataset.editId = '';
-  }
+function openModal(prefill){
+  ['ticker','name','industry','view','price','target','summary','points','risks','catalysts','financials'].forEach(f=>{
+    const el=document.getElementById('f-'+f);if(!el)return;
+    el.value=prefill?(Array.isArray(prefill[f])?prefill[f].join('\n'):(prefill[f]||'')):(f==='view'?'buy':'');
+  });
+  document.getElementById('modalOverlay').dataset.editId=prefill?.id||'';
   document.getElementById('modalOverlay').classList.add('open');
 }
-
-function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
-
-function editThesis(id) {
-  const t = theses.find(x => x.id === id);
-  if (t) openModal(t);
+function closeModal(){document.getElementById('modalOverlay').classList.remove('open');}
+function editThesis(id){const t=theses.find(x=>x.id===id);if(t)openModal(t);}
+function deleteThesis(id){
+  if(!confirm('Delete this thesis?'))return;
+  theses=theses.filter(t=>t.id!==id);save();showList();renderAll();
 }
-
-function deleteThesis(id) {
-  if (!confirm('Delete this thesis?')) return;
-  theses = theses.filter(t => t.id !== id);
-  save();
-  showList();
-  renderAll();
-}
-
-function saveThesis() {
-  const ticker = document.getElementById('f-ticker').value.trim().toUpperCase();
-  if (!ticker) { alert('Ticker is required'); return; }
-  const editId = document.getElementById('modalOverlay').dataset.editId;
-  const price = document.getElementById('f-price').value.trim();
-  const target = document.getElementById('f-target').value.trim();
-  const entry = {
-    id: editId || ticker + '_' + Date.now(),
-    ticker,
-    name: document.getElementById('f-name').value.trim(),
-    industry: document.getElementById('f-industry').value.trim() || 'Uncategorised',
-    view: document.getElementById('f-view').value,
-    price,
-    target,
-    upside: '',
-    upsideClass: 'pos',
-    date: new Date().toLocaleDateString('en-GB', {month:'short', year:'numeric'}),
-    summary: document.getElementById('f-summary').value.trim(),
-    points: document.getElementById('f-points').value.split('\n').map(s => s.trim()).filter(Boolean),
-    risks: document.getElementById('f-risks').value.split('\n').map(s => s.trim()).filter(Boolean),
-    catalysts: document.getElementById('f-catalysts').value.split('\n').map(s => s.trim()).filter(Boolean),
-    financials: document.getElementById('f-financials').value.split('\n').map(s => s.trim()).filter(Boolean),
+function saveThesis(){
+  const ticker=document.getElementById('f-ticker').value.trim().toUpperCase();
+  if(!ticker){alert('Ticker required');return;}
+  const editId=document.getElementById('modalOverlay').dataset.editId;
+  const entry={
+    id:editId||(ticker+'_'+Date.now()),ticker,
+    name:document.getElementById('f-name').value.trim(),
+    industry:document.getElementById('f-industry').value.trim()||'Uncategorised',
+    view:document.getElementById('f-view').value,
+    price:document.getElementById('f-price').value.trim(),
+    target:document.getElementById('f-target').value.trim(),
+    upside:'',upsideClass:'pos',
+    date:new Date().toLocaleDateString('en-GB',{month:'short',year:'numeric'}),
+    summary:document.getElementById('f-summary').value.trim(),
+    points:document.getElementById('f-points').value.split('\n').map(s=>s.trim()).filter(Boolean),
+    risks:document.getElementById('f-risks').value.split('\n').map(s=>s.trim()).filter(Boolean),
+    catalysts:document.getElementById('f-catalysts').value.split('\n').map(s=>s.trim()).filter(Boolean),
+    financials:document.getElementById('f-financials').value.split('\n').map(s=>s.trim()).filter(Boolean),
   };
-  if (editId) {
-    const idx = theses.findIndex(t => t.id === editId);
-    if (idx !== -1) theses[idx] = entry; else theses.unshift(entry);
-  } else {
-    theses.unshift(entry);
-  }
-  save();
-  closeModal();
-  showList();
-  renderAll();
+  if(editId){const i=theses.findIndex(t=>t.id===editId);if(i!==-1)theses[i]=entry;else theses.unshift(entry);}
+  else theses.unshift(entry);
+  save();closeModal();showList();renderAll();
 }
-
-document.getElementById('modalOverlay').addEventListener('click', function(e) {
-  if (e.target === this) closeModal();
+document.getElementById('modalOverlay').addEventListener('click',function(e){if(e.target===this)closeModal();});
+document.addEventListener('click',function(e){
+  const sheet=document.getElementById('filterSheet');
+  if(sheet.classList.contains('open')&&!sheet.contains(e.target)&&!e.target.closest('#tab-filter'))
+    sheet.classList.remove('open');
 });
-
-load();
-renderAll();
+load();renderAll();
 </script>
 </body>
 </html>
